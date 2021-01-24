@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<script>
+
+
+function readAPI()
+{
+  var txt = document.getElementById("txt-srch");
+  const url='https://archive.org/advancedsearch.php?q=subject:google+sheets&output=json';
+  var urlcontent = fetchURL(url);
+  var response = JSON.parse(urlcontent);
+  var data = response["response"]["docs"];
+
+  var table = document.getElementById("table");
+
+  while (table.rows.length > 1) {
+	table.deleteRow(1);
+	}
+  for (var element of  data) {
+  
+  var descStr = " " + element["description"] + " ";
+  if(descStr.includes(""+txt.value+ "") == true)
+	 {
+	 row = table.insertRow();
+    var cell1 = row.insertCell();
+    cell1.innerHTML = element["creator"];
+	var cell2 = row.insertCell();
+    cell2.innerHTML = element["date"];
+	var cell3 = row.insertCell();
+    cell3.innerHTML = element["description"];
+	var cell4 = row.insertCell();
+    cell4.innerHTML = element["language"];
+	}	
+  }
+}
+function fetchURL (urlString)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", urlString, false );
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+</script>
+<style>
+.content {
+  max-width: 700px;
+}
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+</style>
+<head>
+	<title>Data From API - Ahmad Hammoud</title>
+</head>
+<body class="content">
+<div>
+<h1 id="title">Data From API </h1>
+</div>
+<input type="text" id="txt-srch" name="txt-srch" placeholder="Type a text" value="">
+<button type="button" onclick = "readAPI()" id="btn-search">Get</button>
+
+<table id="table" class="styled-table" >
+<tr>
+    <th>Creator</th>
+    <th>Date</th>
+    <th>Description</th>
+    <th>Language</th>
+  </tr>
+</table>
+</body>
+
+
+</html>
